@@ -1,0 +1,24 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set the HTTPS company origin}
+      DATABASE_PATH: /data/dhanvantri.sqlite
+      SESSION_HOURS: 8
+      TRUST_PROXY_IPS: ${TRUST_PROXY_IPS:-}
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - dhanvantri-data:/data
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+volumes:
+  dhanvantri-data:

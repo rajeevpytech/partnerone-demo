@@ -1,0 +1,14 @@
+.git
+.openai
+.env
+.env.*
+!.env.example
+data
+backups
+node_modules
+*.sqlite
+*.sqlite-*
+*.db
+output
+railway-function.js
+scripts/package-railway.cjs
