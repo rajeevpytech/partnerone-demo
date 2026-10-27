@@ -33,3 +33,11 @@ The quotation and proposal PDF are provided separately and are not included in t
 ## Visual tree update validation
 
 Verified placement occupancy, sales roll-up to every ancestor, one-sided versus matched volume, no bonus for placement without a qualifying sale, separate member bonus ownership, funding checks and duplicate-credit prevention. The existing browser-local member ledger is preserved during migration. Tree search, zoom and member forms remain local demonstrations.
+
+## Living storefront and connected reporting update
+
+The base URL now opens an original home-essentials landing page with a generated product still life and six original packaging illustrations. The collection supports categories, price sorting, product details and a local demo bag. Sample orders require an admin review before adding one qualifying sales unit; matching income still requires closing. Demo access is a role chooser, not real authentication.
+
+Income report supports member, period and income-type filters plus CSV export. Income reflection captures before/after values from the same member ledger, including sales, closing, approved benefits and payout reservations. Other members keep separate matching-credit records.
+
+Smart advisor is an explicitly labeled AI interaction preview using deterministic calculations from current sample records, with English and Hindi explanations. No external generative AI service is connected. The Kizaara member area was not available for reference inspection, so this release uses the agreed concept and an original interface rather than claiming a verified copy.
