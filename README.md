@@ -45,3 +45,11 @@ Smart advisor is an explicitly labeled AI interaction preview using deterministi
 ## Reference workflow alignment
 
 Tree now offers BV and sales-unit views, recorded left/right member counts, self BV, unsettled volume, matching volume and carry forward. Demo conversion is explicitly 1,000 BV per qualifying unit. Each new closing saves a member-specific volume snapshot. Closing statement filters by member, period and date and separates gross, TDS, admin and net. Saved credits retain zero deductions; a separate gross-to-net calculator previews hypothetical rates without altering the ledger. CSV reports include all monetary columns. No private reference-account data is included.
+
+## Reference-matched layout release
+
+At the client’s request, the public website and member workspace now use the inspected Kizaara arrangement: horizontal menu groups, a 304px profile column, six coloured summary boxes, a four-column action grid and a classic icon-based binary tree with cyan connectors. The public website uses the red top bar, white navigation, a full-width product banner and product/category sections. PartnerOne branding, original product assets and fictitious data are retained. Existing income, closing, benefit, order and advisor workflows remain connected.
+
+New dashboard links include a recorded team report, order/dispatch report, sample identity/welcome/declaration views and purchase-wallet fund requests. Fund requests require an admin approval and credit the separate purchase wallet once; they do not create commission income. Dispatch updates are simulated.
+
+Validated dashboard/website geometry, menu navigation, member branch/details, bonus ownership, one-time purchase-wallet approval and unchanged commission totals.
