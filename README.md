@@ -40,4 +40,8 @@ The base URL now opens an original home-essentials landing page with a generated
 
 Income report supports member, period and income-type filters plus CSV export. Income reflection captures before/after values from the same member ledger, including sales, closing, approved benefits and payout reservations. Other members keep separate matching-credit records.
 
-Smart advisor is an explicitly labeled AI interaction preview using deterministic calculations from current sample records, with English and Hindi explanations. No external generative AI service is connected. The Kizaara member area was not available for reference inspection, so this release uses the agreed concept and an original interface rather than claiming a verified copy.
+Smart advisor is an explicitly labeled AI interaction preview using deterministic calculations from current sample records, with English and Hindi explanations. No external generative AI service is connected. The Kizaara member dashboard, binary tree, member volume popup, matching incentive history and closing-based commission report were inspected read-only. This demo uses an original interface and fictitious records.
+
+## Reference workflow alignment
+
+Tree now offers BV and sales-unit views, recorded left/right member counts, self BV, unsettled volume, matching volume and carry forward. Demo conversion is explicitly 1,000 BV per qualifying unit. Each new closing saves a member-specific volume snapshot. Closing statement filters by member, period and date and separates gross, TDS, admin and net. Saved credits retain zero deductions; a separate gross-to-net calculator previews hypothetical rates without altering the ledger. CSV reports include all monetary columns. No private reference-account data is included.
