@@ -9,7 +9,8 @@ The contents are plain static HTML, CSS and JavaScript. Serve this directory usi
 ## Explore
 
 - Overview: earnings chart, matching summary and sample profile.
-- My team: searchable sample tree, leg filters, zoom and qualifying demo sales.
+- My team: traditional Left/Right placement tree with open child positions, parent selection, clickable branch focus, ancestor highlighting and individual pair-bonus cards.
+- Show 1:1 example adds two fictitious members with one qualifying sale each below one parent. Credit demo bonuses settles newly formed pairs once, with separate member records and correct root-wallet credit.
 - Admin console: 50/50 profit allocation, funding checks, one-time closing and request approvals.
 - Earnings & wallet: simulated withdrawals, status history and CSV export.
 - Benefits hub: Level 7 education application and Level 8 INR 500 monthly benefit preview.
@@ -28,3 +29,7 @@ The quotation and proposal PDF are provided separately and are not included in t
 - Level 8 approval created exactly one INR 500 credit; the month could not be requested twice.
 - Cancel withdrawal created no request.
 - Mobile menu and 375px content fit were checked in a browser preview.
+
+## Visual tree update validation
+
+Verified placement occupancy, sales roll-up to every ancestor, one-sided versus matched volume, no bonus for placement without a qualifying sale, separate member bonus ownership, funding checks and duplicate-credit prevention. The existing browser-local member ledger is preserved during migration. Tree search, zoom and member forms remain local demonstrations.
