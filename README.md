@@ -1,5 +1,7 @@
 # Dhanvantri Global Pvt Ltd
 
+Release **1.1.0** is prepared as source for hosting after client bill approval. No production hosting or real financial activation has been performed.
+
 Web storefront and partner portal with the requested classic dashboard and Left/Right tree layout, a new emerald-and-gold company emblem, member reports and administrator workflows.
 
 This repository has two explicitly separate modes:
@@ -22,7 +24,7 @@ npm test
 npm run dev
 ```
 
-Open the URL printed by the server. The initial catalogue and accounts are empty. To create the first administrator, use the bootstrap command with a unique password supplied privately through the environment. See [production setup](docs/PRODUCTION.md). Never use a reference-site password for this application.
+Open http://localhost:3000 unless a different PORT is configured. The initial catalogue and accounts are empty. To create the first administrator, use the bootstrap command with a unique password supplied privately through the environment. See [production setup](docs/PRODUCTION.md). Never use a reference-site password for this application.
 
 The repository's GitHub Pages files live at the root. `prepare-dist.cjs` copies only the public asset allowlist into `dist/` for the server. The packaged source distribution already contains `dist/`. Database files, `.env`, backups and server code are outside that static directory.
 
@@ -64,3 +66,10 @@ Payments, bank transfers and benefit eligibility are externally verified manual 
 ## Validation and operation
 
 `npm test` covers authentication, CSRF/origin checks, member privacy, forced-password access restrictions, atomic member import, funded commission closing, duplicate-action prevention, concurrent withdrawal reservations, payout transitions, malformed requests and backup recovery. Public production pages and forms are also checked in the browser. See [API contract](docs/API.md) and [production operation](docs/PRODUCTION.md) for exact capabilities and limits.
+
+
+## Actual backend release1.1
+
+Added optional stock tracking and atomic reservations, pre-approval cancellation, recorded dispatch/delivery, immutable closing statements, full scoped history APIs, session revocation, member login controls and externally approved manual hybrid/reward incentives. Existing data upgrades additively; old closing details remain unknown when they were never recorded. No reference-account data or production credentials are included.
+
+Read [backend architecture](docs/BACKEND-ARCHITECTURE.md) for file responsibilities and transaction boundaries. Automatic hybrid rules still require the written company plan. Stock movements and fulfilment records do not book shipments; manual incentives and payout records do not initiate external bank transfers.

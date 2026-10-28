@@ -1,6 +1,6 @@
 {
   "name": "dhanvantri-global-web",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Dhanvantri Global Pvt Ltd web application",
   "engines": {
@@ -12,6 +12,8 @@
     "test": "node --test tests/*.test.js",
     "bootstrap": "node server/bootstrap.js",
     "backup": "node server/backup.js",
-    "prestart": "node prepare-dist.cjs"
+    "prestart": "node prepare-dist.cjs",
+    "predev": "node prepare-dist.cjs",
+    "pretest": "node prepare-dist.cjs"
   }
 }
