@@ -8,6 +8,8 @@ const id=(prefix)=>prefix+'-'+crypto.randomUUID();
 function openDatabase(filename){
   if(filename!==':memory:') fs.mkdirSync(path.dirname(filename),{recursive:true,mode:0o700});
   const db=new DatabaseSync(filename);
+  const schemaVersion=Number(db.prepare('PRAGMA user_version').get().user_version);
+  if(schemaVersion>2){db.close();throw new Error('This database was created by a newer application version. Upgrade the server before opening it.');}
   if(filename!==':memory:')fs.chmodSync(filename,0o600);
   db.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA synchronous=FULL;');
   db.exec(`
@@ -38,13 +40,15 @@ CREATE TABLE IF NOT EXISTS audit(id TEXT PRIMARY KEY,actor TEXT NOT NULL REFEREN
 CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT,'Audit entries are immutable'); END;
 CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT,'Audit entries are immutable'); END;
 CREATE TABLE IF NOT EXISTS idempotency(user_id TEXT NOT NULL REFERENCES users(id),route TEXT NOT NULL,key TEXT NOT NULL,request_hash TEXT NOT NULL,response_json TEXT NOT NULL,created_at TEXT NOT NULL,PRIMARY KEY(user_id,route,key));
-PRAGMA user_version=1;
+CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY,name TEXT NOT NULL,applied_at TEXT NOT NULL);
 `);
+  if(schemaVersion<1)db.exec('PRAGMA user_version=1;');
+  db.prepare('INSERT OR IGNORE INTO schema_migrations VALUES(1,?,?)').run('Initial accounts and financial ledger',now());
   return db;
 }
 function transaction(db,fn){db.exec('BEGIN IMMEDIATE');try{const out=fn();db.exec('COMMIT');return out;}catch(e){db.exec('ROLLBACK');throw e;}}
 function audit(db,user,action,source,detail){db.prepare('INSERT INTO audit VALUES(?,?,?,?,?,?)').run(id('AUD'),user.id,action,source,JSON.stringify(detail),now());}
 function ledger(db,member,account,kind,amount,source,description){db.prepare('INSERT INTO ledger VALUES(?,?,?,?,?,?,?,?)').run(id('LE'),member,account,kind,amount,source,description,now());}
 function balance(db,member,account='commission'){return Number(db.prepare('SELECT COALESCE(SUM(amount_paise),0) AS n FROM ledger WHERE member_id=? AND account=?').get(member,account).n);}
-function remainingPool(db){const profit=Number(db.prepare('SELECT COALESCE(SUM(amount_paise / 2),0) AS n FROM profit_events').get().n);const credits=Number(db.prepare("SELECT COALESCE(SUM(amount_paise),0) AS n FROM ledger WHERE account='commission' AND kind IN ('matching_credit','monthly_benefit')").get().n);return profit-credits;}
+function remainingPool(db){const profit=Number(db.prepare('SELECT COALESCE(SUM(amount_paise / 2),0) AS n FROM profit_events').get().n);const credits=Number(db.prepare("SELECT COALESCE(SUM(amount_paise),0) AS n FROM ledger WHERE account='commission' AND kind IN ('matching_credit','monthly_benefit','hybrid_credit','reward_credit')").get().n);return profit-credits;}
 module.exports={openDatabase,transaction,audit,ledger,balance,remainingPool,id,now};
