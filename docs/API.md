@@ -67,3 +67,35 @@ Import validates every row before committing: IDs/usernames unique, one root, pa
 - Ledger: `account:'commission'|'purchase',kind,amount_paise` (signed), `source_id,description,created_at`. Zero-valued payout records are audit evidence, not additional debits.
 
 No endpoint accepts arbitrary client-calculated balance, income, BV history, payout amount or complete application state. There is no unauthenticated state-save or member financial-adjustment API.
+
+## Backend release 1.1: inventory, fulfilment and saved statements
+
+This release is source preparation. It is not a deployment or activation of a commercial plan.
+
+| Method/path | Contract |
+|---|---|
+| GET `/api/admin/inventory` | Admin only: `{inventory,events}` with physical on-hand, reserved and available quantities; recent immutable stock movements |
+| POST `/api/admin/inventory` | `{product_id,tracked?:boolean,adjustment_quantity:signedInteger,reference,reason}`; optional `Idempotency-Key` |
+| POST `/api/orders/:id/cancel` | Owning member only, Pending orders: `{reason}`; optional `Idempotency-Key`; releases purchase-wallet and stock reservations once |
+| POST `/api/admin/orders/:id/fulfilment` | `{status:'Dispatched'|'Delivered',carrier,tracking_reference,reference?}`; administrator records external fulfilment; dispatch required before delivery |
+| GET `/api/admin/incentives` | Administrator-only recent immutable approval evidence |
+| POST `/api/admin/incentives` | `{member_id,kind:'hybrid'|'reward',amount_paise,reference,reason}`; optional `Idempotency-Key`; externally approved manual credit, approved plan and funded member pool required |
+| GET `/api/closings` | Persisted member closing items; filters `member_id` (admin only), `period=YYYY-MM`, `from=YYYY-MM-DD`, `to=YYYY-MM-DD`, `page`, `page_size` (1–100) |
+| GET `/api/closings/:id` | Own saved item(s) for members, complete closing for admins; guessed unrelated IDs return404 |
+| GET `/api/closing-statement.csv` | All matching rows for the same closing filters, independent of page size; private download |
+| GET `/api/records/:kind` | `kind=ledger|orders|withdrawals|funding|benefits`; scoped paginated full history with totals |
+| GET `/api/auth/sessions` | Own `{sessions:[{created_at,expires_at,current}],total}` without session tokens or hashes |
+| POST `/api/auth/logout-others` | `{}`; revokes only the account's other sessions and preserves the current session |
+| PATCH `/api/admin/members/:id/status` | `{active:boolean,reason}`; login access only; disables sessions immediately, never changes earned money or tree placement |
+
+Stock tracking is opt-in. Existing products remain untracked until an operator records a physical count. Enabling tracking reconciles all existing Pending orders in the same transaction; it fails if stock cannot cover them. New orders reserve stock and purchase funds atomically. Approval consumes a stock hold once. Rejecting or cancelling a Pending order releases the hold once. Historical Approved orders are not deducted again during migration. Internal inventory references and movements remain admin-only; public product rows expose only `stock_tracked` and `available_quantity`.
+
+Cancellation preserves the base order status `Rejected` and adds `cancelled_at` and `cancellation_reason`; the web interface labels it Cancelled. Approved-order returns/refunds are not implemented by this cancellation API. Orders include `fulfilment_status,carrier,tracking_reference,dispatched_at,delivered_at`. Tracking records do not book shipments or call a carrier API.
+
+Saved closing items include original member name, India calendar period, BV before/after settlement, pair count, plan snapshot and integer gross/TDS/admin/net values. Existing credits have zero configured deductions; no tax rate is inferred. Old closings without captured details remain explicitly unavailable, with their recorded credits retained. Report and approval-evidence rows are immutable. `/api/closings` returns `{items,page,page_size,total,pages,legacy_count,totals,filters,timezone}`. CSV preserves the selected financial scope. The generic record history supports `from,to,member_id,page,page_size,status,sort,direction` and ledger-only `account,entry_kind`; unsupported fields, sorts and duplicate query parameters are rejected.
+
+Hybrid and reward credits are **manual externally approved incentives**, not an inferred Kizaara algorithm. They credit only the chosen member and consume the same verified50% pool as matching/monthly support. Repeated approval references or repeated processed requests cannot create a second credit. Automatic hybrid rank/rate rules require the company's written plan specification.
+
+Imported disabled accounts cannot be activated merely by toggling login status: the administrator must first issue unique temporary credentials. Temporary-password users cannot access session lists or any private reports until changing the password.
+
+The import endpoint accepts up to1MiB of JSON and1,000 records. Other JSON requests are limited to64KiB. Oversized requests return413 without crashing the service. Bootstrap is still a recent-record overview, with up to1,000 financial rows; use paginated record APIs or complete private exports for older history.

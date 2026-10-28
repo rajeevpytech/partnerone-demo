@@ -78,3 +78,17 @@ Use your established certificate-renewal setup. An origin change requires updati
 Run `npm run backup` with `DATABASE_PATH` and optional absolute `BACKUP_PATH`. It uses SQLite `VACUUM INTO` for a consistent snapshot, refuses to overwrite files and creates files with owner-only permissions. Copy encrypted backups to your existing restricted off-host backup destination. Test recovery before accepting real customer money: stop the service, preserve the current disk, restore a validated snapshot to `DATABASE_PATH`, set ownership and restart. Do not copy only a live WAL database file.
 
 Run `npm test` before deploying. The suite exercises auth, CSRF, role and member privacy, transactionally funded closing, duplicate approval/credit prevention, concurrent overdraw prevention, reservation release, payout transition rules, monthly support funding, education non-disbursal, atomic verified imports, malformed URL handling, input validation and durable records. A passing suite is a code-level check; also verify your TLS, domain, persistence, restore procedure, credentials, approved plan, products, contact/legal content and live member workflows on the selected host.
+
+## Release 1.1 upgrade and activation
+
+This release is prepared for deployment after the client's bill is approved. No production account, public host, payment provider or real member data is configured by the source package.
+
+The server initializes additive commerce, incentive-evidence and closing-report tables, records schema migration2 and preserves existing version1 users, orders and ledger rows. Take a verified backup before an upgrade. Migration does not seed stock, reconstruct old closing details or rewrite earned income. A database with a schema newer than this server is rejected rather than downgraded. Restore tests and schema-persistence tests are included.
+
+Inventory remains untracked until a physical count is recorded. Stock tracking requires reconciliation of existing Pending orders; it does not re-debit historical approved sales. Dispatch/delivery are operator records with carrier/tracking evidence, not carrier integrations. Cancellation applies only before approval and releases reservations; approved-sale refunds require a separately reviewed reversal process.
+
+Manual hybrid/reward approval requires an evidence reference, an approved plan and enough verified member-pool funding. It is not an automatic rank or hybrid algorithm. These credits are included in commission totals and consume the same50% pool. Never enter an assumed bonus rate to imitate the reference platform.
+
+Session lists disclose no bearer tokens. Revoking other sessions keeps the current device signed in. Member account enable/disable controls affect login access only; they do not determine benefit eligibility or remove a member's financial history. Temporary credentials must change before private data can be read.
+
+Saved closing statements retain original BV, rate, cap, member name and recorded amounts; CSV/history APIs are scoped on the server. India calendar date filters include the full selected days. Older records whose detailed snapshots were never captured are shown as unavailable, not estimated. Bootstrap lists remain recent previews; the paginated/history APIs and complete exports support older records.
